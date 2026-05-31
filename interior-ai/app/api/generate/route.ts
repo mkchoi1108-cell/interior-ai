@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     const { images, style, customPrompt } = await req.json();
     const ai = new GoogleGenAI({ apiKey });
 
-    // Step 1: Gemini analyzes room and generates prompt
+    // Step 1: Gemini 1.5 Flash로 방 분석
     const analysisParts = [
       ...images.map((img: string) => ({
         inlineData: { mimeType: 'image/jpeg', data: img },
@@ -61,7 +61,7 @@ JSON으로만 응답 (다른 텍스트 없이):
     ];
 
     const analysisResponse = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       contents: [{ role: 'user', parts: analysisParts }],
     });
 
@@ -70,7 +70,7 @@ JSON으로만 응답 (다른 텍스트 없이):
     const analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     if (!analysis) return NextResponse.json({ error: '방 분석에 실패했습니다' }, { status: 500 });
 
-    // Step 2: Gemini 2.0 Flash Image generates interior image
+    // Step 2: Gemini로 인테리어 이미지 생성
     const imageResponse = await ai.models.generateContent({
       model: 'gemini-2.0-flash-preview-image-generation',
       contents: [{
@@ -92,9 +92,9 @@ JSON으로만 응답 (다른 텍스트 없이):
       return NextResponse.json({ error: '이미지 생성에 실패했습니다. 다시 시도해주세요.' }, { status: 500 });
     }
 
-    // Step 3: Gemini recommends furniture
+    // Step 3: Gemini 1.5 Flash로 가구 추천
     const furnitureResponse = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       contents: [{
         role: 'user',
         parts: [{
