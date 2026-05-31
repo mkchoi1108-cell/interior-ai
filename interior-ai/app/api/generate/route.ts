@@ -70,7 +70,7 @@ JSON으로만 응답 (다른 텍스트 없이):
     if (!analysis) return NextResponse.json({ error: '방 분석에 실패했습니다' }, { status: 500 });
 
     const imageResponse = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-preview-image-generation',
+      model: 'gemini-3.1-flash-image',
       contents: [{
         role: 'user',
         parts: [{ text: `${analysis.imagePrompt}. High quality photorealistic interior design, professional photography, architectural digest style, well-lit, detailed.` }],
