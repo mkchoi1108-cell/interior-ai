@@ -61,7 +61,7 @@ JSON으로만 응답 (다른 텍스트 없이):
     ];
 
     const analysisResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash',
       contents: [{ role: 'user', parts: analysisParts }],
     });
 
@@ -70,9 +70,9 @@ JSON으로만 응답 (다른 텍스트 없이):
     const analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     if (!analysis) return NextResponse.json({ error: '방 분석에 실패했습니다' }, { status: 500 });
 
-    // Step 2: Gemini 2.5 Flash Image generates interior image
+    // Step 2: Gemini 2.0 Flash Image generates interior image
     const imageResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
+      model: 'gemini-2.0-flash-preview-image-generation',
       contents: [{
         role: 'user',
         parts: [{ text: `${analysis.imagePrompt}. High quality photorealistic interior design, professional photography, architectural digest style, well-lit, detailed.` }],
@@ -94,7 +94,7 @@ JSON으로만 응답 (다른 텍스트 없이):
 
     // Step 3: Gemini recommends furniture
     const furnitureResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash',
       contents: [{
         role: 'user',
         parts: [{
